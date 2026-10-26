@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>EV Market Insights</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one long scroll. Hero with a battery-pack graphic, KPI strip, then
+   views, chemistries and vehicle classes as plain ruled lists, then data and links. */
+:root{
+  --bg:#f2f6f3; --surface:#ffffff; --fg:#12261b; --muted:#53665b; --line:#d3dfd7;
+  --accent:#0a7a4a; --accent-ink:#ffffff; --charge:#c8e9d4; --warn:#b97a0b;
+  --display:"Bricolage Grotesque","Helvetica Neue",Arial,sans-serif;
+  --body:"Instrument Sans","Helvetica Neue",Arial,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0d1a13; --surface:#13251b; --fg:#e6f1ea; --muted:#9bb0a2; --line:#27402f;
+  --accent:#4fd18b; --accent-ink:#06150d; --charge:#1c4a31; --warn:#e3a53a; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0d1a13; --surface:#13251b; --fg:#e6f1ea; --muted:#9bb0a2; --line:#27402f;
+  --accent:#4fd18b; --accent-ink:#06150d; --charge:#1c4a31; --warn:#e3a53a; color-scheme:dark}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--fg);font:400 16px/1.6 var(--body);
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap{max-width:1120px;margin:0 auto}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--accent);outline-offset:3px;border-radius:4px}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;letter-spacing:-.02em;line-height:1.05}
+.label{font:500 12px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+
+nav{display:flex;justify-content:space-between;align-items:center;gap:16px;padding-block:20px;flex-wrap:wrap}
+nav .brand{font:800 18px/1 var(--display);letter-spacing:-.01em}
+nav .links{display:flex;gap:20px;font-size:14px;flex-wrap:wrap}
+nav .links a{text-decoration:none;color:var(--muted)}
+nav .links a:hover{color:var(--fg)}
+
+.hero{display:grid;grid-template-columns:1.15fr .85fr;gap:48px;align-items:center;padding-block:56px 64px}
+.hero h1{font-size:clamp(40px,6.4vw,76px);font-weight:800}
+.hero h1 em{font-style:normal;color:var(--accent)}
+.hero p{max-width:52ch;color:var(--muted);font-size:18px;margin:24px 0 32px}
+.btns{display:flex;gap:12px;flex-wrap:wrap}
+.btn{display:inline-block;padding:13px 22px;border-radius:6px;font-weight:600;text-decoration:none;border:1.5px solid var(--fg)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn:hover{transform:translateY(-1px)}
+
+.pack{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:28px}
+.pack svg{display:block;width:100%;height:auto}
+.pack .cap{display:flex;justify-content:space-between;gap:12px;margin-top:16px;flex-wrap:wrap}
+.pack .big{font:800 34px/1 var(--display)}
+.pack .big small{font:500 14px var(--mono);color:var(--muted);margin-left:4px}
+
+.kpis{display:grid;grid-template-columns:repeat(6,1fr);border-block:1px solid var(--line)}
+.kpi{padding:24px 16px 24px 0;min-width:0}
+.kpi + .kpi{padding-left:16px;border-left:1px solid var(--line)}
+.kpi b{display:block;font:800 clamp(24px,3vw,34px)/1.1 var(--display);color:var(--accent);margin-top:10px;font-variant-numeric:tabular-nums}
+
+section{padding-block:72px 8px}
+.sec-head{display:grid;grid-template-columns:1fr 2fr;gap:32px;margin-bottom:28px}
+.sec-head h2{font-size:clamp(28px,4vw,44px);font-weight:700}
+.sec-head p{margin:0;color:var(--muted);max-width:60ch}
+
+.rows{border-top:1px solid var(--line)}
+.row{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,2fr) auto;gap:24px;padding:18px 0;border-bottom:1px solid var(--line);align-items:baseline}
+.row h3{font-size:20px;font-weight:700;letter-spacing:-.01em}
+.row p{margin:0;color:var(--muted)}
+.tag{font:500 12px var(--mono);color:var(--muted);white-space:nowrap}
+
+.chem{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
+.chem div{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px;min-width:0}
+.chem b{font:800 26px/1 var(--display);display:block;margin-bottom:8px}
+.chem span{font-size:14px;color:var(--muted)}
+.chem .new b{color:var(--warn)}
+
+.chips{display:flex;flex-wrap:wrap;gap:10px}
+.chip{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:8px 16px;font-weight:500}
+
+.fields{columns:3 220px;column-gap:32px;font:400 13px/2 var(--mono);color:var(--muted);margin:0;padding:0;list-style:none}
+
+.cta{margin-top:80px;background:var(--accent);color:var(--accent-ink);border-radius:16px;padding:48px;display:flex;justify-content:space-between;gap:24px;align-items:center;flex-wrap:wrap}
+.cta h2{font-size:clamp(26px,3.6vw,40px);font-weight:800;max-width:20ch}
+.cta .btn{border-color:var(--accent-ink);color:var(--accent-ink)}
+footer{padding-block:32px 40px;color:var(--muted);font-size:14px}
+
+@media (max-width:880px){
+  .hero{grid-template-columns:1fr;gap:32px;padding-block:32px 48px}
+  .kpis{grid-template-columns:repeat(2,1fr)}
+  .kpi,.kpi + .kpi{padding:20px 12px 20px 0;border-left:0;border-bottom:1px solid var(--line)}
+  .kpi:nth-child(even){padding-left:16px;border-left:1px solid var(--line)}
+  .sec-head{grid-template-columns:1fr;gap:12px}
+  .row{grid-template-columns:1fr;gap:6px}
+  .chem{grid-template-columns:repeat(2,1fr)}
+  .cta{padding:32px 24px}
+}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.btn:hover{transform:none}}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <nav>
+    <span class="brand">EV Market Insights</span>
+    <div class="links"><a href="#views">Dashboard views</a><a href="#batteries">Batteries</a><a href="#vehicles">Vehicle classes</a><a href="#data">Data</a></div>
+  </nav>
+
+  <header class="hero">
+    <div>
+      <span class="label">Tableau dashboard and story</span>
+      <h1 style="margin-top:16px">17,980 electric vehicles, <em>one market picture.</em></h1>
+      <p>Annual sales, battery chemistry, driving range and customer ratings for 200 manufacturers, collected into one interactive dashboard and a guided story.</p>
+      <div class="btns">
+        <a class="btn primary" href="https://github.com/nainikasaklecha-commits/EV-Vehicles-Insights/tree/main" target="_blank" rel="noopener">View on GitHub</a>
+        <a class="btn" href="#views">See what is inside</a>
+      </div>
+    </div>
+
+    <div class="pack" role="img" aria-label="Battery pack graphic: average pack 78.2 kilowatt-hours, average range 324.5 kilometres">
+      <svg viewBox="0 0 320 130" aria-hidden="true">
+        <rect x="4" y="12" width="290" height="106" rx="14" fill="none" stroke="currentColor" stroke-width="3" style="color:var(--fg)"/>
+        <rect x="298" y="46" width="14" height="38" rx="4" fill="currentColor" style="color:var(--fg)"/>
+        <g fill="var(--accent)">
+          <rect x="16" y="24" width="30" height="82" rx="5"/><rect x="52" y="24" width="30" height="82" rx="5"/>
+          <rect x="88" y="24" width="30" height="82" rx="5"/><rect x="124" y="24" width="30" height="82" rx="5"/>
+          <rect x="160" y="24" width="30" height="82" rx="5"/><rect x="196" y="24" width="30" height="82" rx="5"/>
+          <rect x="232" y="24" width="30" height="82" rx="5"/>
+        </g>
+        <rect x="268" y="24" width="14" height="82" rx="5" fill="var(--charge)"/>
+      </svg>
+      <div class="cap">
+        <div><span class="label">Average pack</span><div class="big">78.2<small>kWh</small></div></div>
+        <div><span class="label">Average range</span><div class="big">324.5<small>km</small></div></div>
+      </div>
+    </div>
+  </header>
+
+  <div class="kpis" aria-label="Key figures">
+    <div class="kpi"><span class="label">Manufacturers</span><b>200</b></div>
+    <div class="kpi"><span class="label">Vehicles</span><b>17,980</b></div>
+    <div class="kpi"><span class="label">Annual units</span><b>1.55B</b></div>
+    <div class="kpi"><span class="label">Avg rating</span><b>4.09 / 5</b></div>
+    <div class="kpi"><span class="label">Avg range</span><b>324.5 km</b></div>
+    <div class="kpi"><span class="label">Avg battery</span><b>78.2 kWh</b></div>
+  </div>
+
+  <section id="views">
+    <div class="sec-head">
+      <h2>Seven views, one question each</h2>
+      <p>Click a bar or a map bubble and every other chart filters to match. Click again to clear.</p>
+    </div>
+    <div class="rows">
+      <div class="row"><h3>Manufacturer sales</h3><p>Which ten manufacturers sell the most vehicles each year.</p><span class="tag">bar</span></div>
+      <div class="row"><h3>Vehicle category</h3><p>How annual sales split across scooters, cars, SUVs, vans, trucks and buses.</p><span class="tag">bar</span></div>
+      <div class="row"><h3>Battery type</h3><p>How sales divide between the five battery chemistries.</p><span class="tag">bar</span></div>
+      <div class="row"><h3>Market region</h3><p>Where demand is strongest, region by region.</p><span class="tag">bar</span></div>
+      <div class="row"><h3>Driving range</h3><p>Average range in kilometres for each vehicle category.</p><span class="tag">bar, km</span></div>
+      <div class="row"><h3>Customer rating</h3><p>The ten highest-rated manufacturers. Ratings sit close together, so the axis starts above zero.</p><span class="tag">dot</span></div>
+      <div class="row"><h3>Manufacturing footprint</h3><p>Sales by the country where vehicles are built.</p><span class="tag">map</span></div>
+    </div>
+  </section>
+
+  <section id="batteries">
+    <div class="sec-head">
+      <h2>Five battery chemistries</h2>
+      <p>The battery type decides cost, cycle life and charging behaviour, so the dashboard shows each chemistry's share of sales.</p>
+    </div>
+    <div class="chem">
+      <div><b>LFP</b><span>Lithium iron phosphate</span></div>
+      <div><b>NMC</b><span>Nickel manganese cobalt</span></div>
+      <div><b>NCA</b><span>Nickel cobalt aluminium</span></div>
+      <div class="new"><b>Sodium-Ion</b><span>Lithium-free cells</span></div>
+      <div class="new"><b>Solid-State</b><span>Solid electrolyte cells</span></div>
+    </div>
+  </section>
+
+  <section id="vehicles">
+    <div class="sec-head">
+      <h2>From scooters to buses</h2>
+      <p>Vehicle categories in the dataset, from two-wheelers to heavy transport.</p>
+    </div>
+    <div class="chips">
+      <span class="chip">Scooter</span><span class="chip">3-Wheeler</span><span class="chip">Micro Car</span>
+      <span class="chip">Van / MPV</span><span class="chip">Full SUV</span><span class="chip">Pickup</span>
+      <span class="chip">E-Truck</span><span class="chip">E-Bus</span>
+    </div>
+  </section>
+
+  <section id="data">
+    <div class="sec-head">
+      <h2>36 fields per vehicle</h2>
+      <p>One row per vehicle in the ev_market_train dataset, bundled with the workbook as a Tableau extract.</p>
+    </div>
+    <ul class="fields">
+      <li>manufacturer</li><li>model_name</li><li>model_year</li><li>manufacturing_country</li><li>market_region</li>
+      <li>category</li><li>battery_capacity_kwh</li><li>battery_type</li><li>battery_cycle_life</li><li>range_km</li>
+      <li>efficiency_wh_per_km</li><li>motor_power_kw</li><li>torque_nm</li><li>drivetrain</li><li>top_speed_kmph</li>
+      <li>acceleration_0_100_sec</li><li>max_dc_charging_kw</li><li>charging_dc_fast_time_min</li><li>charging_ac_time_hr</li><li>price_usd</li>
+      <li>warranty_years</li><li>resale_value_pct_3yr</li><li>safety_rating_stars</li><li>autonomous_level</li><li>co2_saved_tons_per_year</li>
+      <li>annual_sales_units</li><li>customer_rating</li><li>and 9 more</li>
+    </ul>
+  </section>
+
+  <div class="cta">
+    <h2>Open the workbook and explore it yourself.</h2>
+    <a class="btn" href="https://github.com/nainikasaklecha-commits/EV-Vehicles-Insights/tree/main" target="_blank" rel="noopener">Get the files on GitHub</a>
+  </div>
+
+  <footer>EV Market Insights. Built with Tableau from the ev_market_train dataset.</footer>
+</div>
+
+</body>
+</html>
