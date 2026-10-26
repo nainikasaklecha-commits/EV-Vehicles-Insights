@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>EV Market Performance & Insights</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+</head>
+<body>
+  <header>
+    <h1>Electric Vehicle Market Performance &amp; Insights</h1>
+    <p>Interactive dashboard built from the EV market dataset</p>
+  </header>
+  <main>
+    <div id="status" class="status">Loading data...</div>
+    <section class="filters" id="filters"></section>
+    <section class="kpis" id="kpis"></section>
+    <section class="grid">
+      <div class="card"><h3>Sales by manufacturer</h3><canvas id="c_manufacturer"></canvas></div>
+      <div class="card"><h3>Sales by battery type</h3><canvas id="c_battery"></canvas></div>
+      <div class="card"><h3>Sales by region</h3><canvas id="c_region"></canvas></div>
+      <div class="card"><h3>Sales by category</h3><canvas id="c_category"></canvas></div>
+      <div class="card"><h3>Sales by manufacturing country</h3><canvas id="c_country"></canvas></div>
+      <div class="card"><h3>Sales trend by model year</h3><canvas id="c_trend"></canvas></div>
+      <div class="card"><h3>Average rating by category</h3><canvas id="c_rating"></canvas></div>
+      <div class="card"><h3>Average range by category</h3><canvas id="c_range"></canvas></div>
+      <div class="card"><h3>Average energy use by category</h3><canvas id="c_energy"></canvas></div>
+    </section>
+    <section class="card tableau">
+      <h3>Tableau Public</h3>
+      <p>
+        <a target="_blank" href="https://public.tableau.com/app/profile/mausam.kumar.pandit/viz/EV_Market_Performance_Market_Story_2026-10-25/EVExecutiveDashboard">Open Executive Dashboard</a> |
+        <a target="_blank" href="https://public.tableau.com/app/profile/mausam.kumar.pandit/viz/EV_Market_Performance_Green_Executive_Refresh/Story2">Open Story</a>
+      </p>
+    </section>
+  </main>
+  <script src="{{ url_for('static', filename='dashboard.js') }}"></script>
+</body>
+</html>
